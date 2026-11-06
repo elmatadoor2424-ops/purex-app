@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, MessageCircle, Phone, Menu, X, Shield, ArrowLeft } from 'lucide-react';
+import { Sparkles, MessageCircle, Menu, X, Shield, ArrowLeft, UserCheck } from 'lucide-react';
+import { PUREX_CONFIG } from '@/lib/constants';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -13,7 +14,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
 
   return (
     <nav
-      className="sticky top-0 z-40 w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/80"
+      className="sticky top-0 z-40 w-full bg-zinc-950/85 backdrop-blur-xl border-b border-zinc-800/80 font-sans"
       dir="rtl"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,14 +37,14 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
                   </span>
                 </div>
                 <span className="text-[11px] text-zinc-400 block font-medium">
-                  خدمات النظافة الفندقية الفاخرة
+                  خدمات النظافة والتعقيم الفندقي الفاخر
                 </span>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+          <div className="hidden lg:flex items-center gap-7 text-sm font-medium text-zinc-300">
             <Link
               href="/"
               className="text-white hover:text-cyan-400 transition-colors"
@@ -62,32 +63,35 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
             >
               المعايير الفندقية
             </a>
-            <a
-              href="#why-purex"
-              className="hover:text-cyan-400 transition-colors"
+            <Link
+              href="/workers/register"
+              className="text-amber-300 hover:text-amber-200 transition-colors flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30"
             >
-              لماذا PureX؟
-            </a>
+              <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+              <span>تسجيل العاملات</span>
+            </Link>
             <Link
               href="/admin/operations"
               className="text-zinc-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800"
             >
               <Shield className="w-3.5 h-3.5 text-cyan-400" />
-              <span>لوحة العمليات (دنيا)</span>
+              <span>لوحة العمليات (دنيا وأحمد)</span>
             </Link>
           </div>
 
           {/* Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <a
-              href="https://wa.me/201024897750?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20PureX%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D9%86%D8%B8%D8%A7%D9%81%D8%A9%20%D8%A7%D9%84%D9%81%D9%86%D8%AF%D9%82%D9%8A%D8%A9"
+              href={`https://wa.me/${PUREX_CONFIG.whatsappIntl}?text=${encodeURIComponent(
+                'مرحباً PureX، أود الاستفسار عن خدمات النظافة الفندقية وحجز موعد.'
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all flex items-center gap-2 text-xs font-semibold"
               title="تواصل مباشر عبر الواتساب"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>واتساب 24/7</span>
+              <span>واتساب: {PUREX_CONFIG.whatsappNumber}</span>
             </a>
 
             <button
@@ -142,20 +146,21 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
             >
               معايير PureX الفندقية
             </a>
-            <a
-              href="#why-purex"
+            <Link
+              href="/workers/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-zinc-300 hover:text-cyan-400"
+              className="text-amber-300 hover:text-amber-200 flex items-center gap-2 py-1"
             >
-              ضمان الأمان والخصوصية
-            </a>
+              <UserCheck className="w-4 h-4 text-amber-400" />
+              <span>بوابة تسجيل العاملات والتحقق من الهوية</span>
+            </Link>
             <Link
               href="/admin/operations"
               onClick={() => setMobileMenuOpen(false)}
               className="text-cyan-400 hover:text-cyan-300 pt-2 border-t border-zinc-800 flex items-center gap-2"
             >
               <Shield className="w-4 h-4" />
-              <span>لوحة العمليات والإدارة (دنيا)</span>
+              <span>لوحة العمليات والإدارة (دنيا وأحمد)</span>
             </Link>
           </div>
 
@@ -170,13 +175,13 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
               احجز موعدك الآن
             </button>
             <a
-              href="https://wa.me/201024897750"
+              href={`https://wa.me/${PUREX_CONFIG.whatsappIntl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-emerald-400 font-semibold text-sm flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>محادثة واتساب مباشرة</span>
+              <span>واتساب م/ أحمد ({PUREX_CONFIG.whatsappNumber})</span>
             </a>
           </div>
         </div>

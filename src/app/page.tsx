@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import PricingCalculator from '@/components/PricingCalculator';
 import BookingModal from '@/components/BookingModal';
+import Footer from '@/components/Footer';
+import { PUREX_CONFIG } from '@/lib/constants';
 import { PropertyType } from '@/types/booking';
 import {
   Sparkles,
@@ -315,16 +317,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Worker Recruitment Banner */}
+      <section className="py-8 max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="rounded-3xl bg-gradient-to-r from-amber-950/40 via-zinc-900 to-amber-950/40 border border-amber-500/30 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl shadow-amber-500/5">
+          <div className="space-y-2 text-right">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-semibold border border-amber-500/30">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>فرص انضمام للعاملات المتميزات</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-white">
+              انضمي لفريق عاملات PureX الفندقيات
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-300 max-w-xl leading-relaxed">
+              رواتب مجزية، بيئة عمل فندقية راقية، وتأمين وحماية كاملة تحت إشراف شبكة CyberX. سجلي الآن وارفعي صورة بطاقة الرقم القومي.
+            </p>
+          </div>
+
+          <Link
+            href="/workers/register"
+            className="shrink-0 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-black font-black text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>بوابة تسجيل العاملات</span>
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Floating CTA Banner */}
-      <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6">
+      <section className="py-12 max-w-5xl mx-auto px-4 sm:px-6">
         <div className="rounded-3xl bg-gradient-to-r from-cyan-900/60 via-zinc-900 to-blue-900/60 border border-cyan-500/40 p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl shadow-cyan-500/10">
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
             <h3 className="text-3xl sm:text-4xl font-black text-white">
               جاهز لتجربة نظافة تفوق توقعاتك؟
             </h3>
             <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-              احجز موعدك الآن عبر الآلة التفاعلية، ادفع العربون بأمان عبر إنستا باي أو فودافون كاش،
-              ودع فريق PureX يتولى الباقي.
+              احجز موعدك الآن عبر الآلة التفاعلية، ادفع العربون بأمان عبر فودافون كاش أو Axis Pay أو USDT،
+              ودع فريق PureX يتولى الباقي بأعلى المعايير الفندقية.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
@@ -334,80 +362,21 @@ export default function Home() {
                 حجز موعد فوري
               </button>
               <a
-                href="https://wa.me/201024897750"
+                href={`https://wa.me/${PUREX_CONFIG.whatsappIntl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-emerald-400 font-bold text-sm flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>محادثة واتساب مخصصة</span>
+                <span>واتساب م/ أحمد ({PUREX_CONFIG.whatsappNumber})</span>
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/80 bg-zinc-950 py-12 text-right">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black text-white font-sans">
-                  Pure<span className="text-cyan-400">X</span>
-                </span>
-                <span className="text-xs px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
-                  CyberX
-                </span>
-              </div>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                منظومة النظافة والتعقيم الفندقية الراقية للشقق والفلل والمقرات الإدارية بأعلى معايير
-                الأمان والخصوصية الرقمية.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-white mb-3">الخدمات الأساسية</h4>
-              <ul className="space-y-2 text-xs text-zinc-400">
-                <li>نظافة الفلل والقصور المستقلة</li>
-                <li>نظافة الشقق والدوبلكس الفندقية</li>
-                <li>نظافة ما بعد التشطيب وإزالة الأسمنت</li>
-                <li>تنظيف مقرات الشركات والمكاتب الإدارية</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-white mb-3">طرق السداد المعتمدة</h4>
-              <ul className="space-y-2 text-xs text-zinc-400">
-                <li>فودافون كاش (Vodafone Cash)</li>
-                <li>إنستا باي (InstaPay اللحظي)</li>
-                <li>Binance USDT (TRC-20 Crypto)</li>
-                <li>الدفع النقدي للمشرف عند الاستلام النهائي</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-white mb-3">فريق العمليات والدعم</h4>
-              <p className="text-xs text-zinc-400 mb-3">
-                إدارة التشغيل والمتابعة تحت إشراف أ/ دنيا وفريق خبراء PureX.
-              </p>
-              <Link
-                href="/admin/operations"
-                className="inline-flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 font-semibold"
-              >
-                <span>دخول لوحة تحكم العمليات (دنيا) ←</span>
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-12 pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
-            <div>جميع الحقوق محفوظة © 2026 PureX Cleaning Services - إحدى قطاعات منظومة CyberX.</div>
-            <div className="flex gap-4">
-              <span>القاهرة الكبرى • التجمع الخامس • الشيخ زايد • المعادي • العاصمة الإدارية</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Global Unified Footer */}
+      <Footer />
 
       {/* Booking Modal */}
       <BookingModal

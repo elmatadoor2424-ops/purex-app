@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addBooking, getAllBookings, updateBookingStatus, updateInspection } from '@/lib/store';
 import { Booking, PaymentMethod, PropertyType, TimeSlot } from '@/types/booking';
+import { notifyAhmadViaWebhook, generateBookingWhatsAppMessage, getDirectWhatsAppUrl } from '@/lib/whatsapp';
+import { PUREX_CONFIG } from '@/lib/constants';
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,9 +67,9 @@ export async function POST(request: NextRequest) {
 
     // Create booking in store
     const newBooking = addBooking({
-      clientName: name,
-      clientPhone: phone,
-      clientWhatsApp: clientWhatsApp || phone,
+      clientName: name.trim(),
+      clientPhone: phone.trim(),
+      clientWhatsApp: (clientWhatsApp || phone).trim(),
       clientLocation: location || 'القاهرة الكبرى',
       compoundOrBuilding: compoundOrBuilding || '',
       propertyType: propertyType as PropertyType,
@@ -87,85 +89,20 @@ export async function POST(request: NextRequest) {
       notes: notes || '',
     });
 
-    // Format JSON payload for WapiPilot WhatsApp API
-    const wapiPilotPayload = {
-      event: 'booking_created',
-      platform: 'PureX by CyberX',
-      bookingId: newBooking.id,
-      timestamp: new Date().toISOString(),
-      client: {
-        name: newBooking.clientName,
-        phone: newBooking.clientPhone,
-        whatsapp: newBooking.clientWhatsApp,
-        location: newBooking.clientLocation,
-        compound: newBooking.compoundOrBuilding,
-      },
-      service: {
-        propertyType: newBooking.propertyType,
-        areaM2: newBooking.areaSquareMeters,
-        rooms: newBooking.roomsCount,
-        bathrooms: newBooking.bathroomsCount,
-        date: newBooking.serviceDate,
-        timeSlot: newBooking.timeSlot,
-        addOns: newBooking.addOns,
-      },
-      financials: {
-        estimatedPriceEGP: newBooking.estimatedPrice,
-        depositAmountEGP: newBooking.depositAmount,
-        paymentMethod: newBooking.paymentMethod,
-        depositConfirmed: newBooking.depositConfirmed,
-        depositReference: newBooking.depositReference,
-      },
-      notes: newBooking.notes,
-      messageTemplate: {
-        header: `✨ مرحباً ${newBooking.clientName}، تم استلام طلب حجز PureX بنجاح!`,
-        body: `كود الحجز: *${newBooking.id}*\nالتاريخ: ${newBooking.serviceDate} (${newBooking.timeSlot === 'morning' ? 'فترة صباحية 9ص' : 'فترة مسائية 2م'})\nنوع العقار: ${newBooking.propertyType}\nالتكلفة التقديرية: ${newBooking.estimatedPrice} ج.م\nقيمة العربون: ${newBooking.depositAmount} ج.م (${newBooking.depositConfirmed ? '✅ تم تأكيد السداد' : '⏳ بانتظار التحويل'})\n\nسيقوم مشرف تشغيل PureX بالتواصل معكم هاتفياً لتأكيد كافة الترتيبات الفندقية.`,
-        footer: 'PureX - معايير النظافة الفندقية الفاخرة | CyberX Ecosystem',
-      },
-    };
-
-    // Push to WapiPilot Webhook
-    const webhookUrl = process.env.WAPIPILOT_WEBHOOK_URL || 'https://api.wapipilot.com/v1/webhook/purex';
-    const apiKey = process.env.WAPIPILOT_API_KEY || '';
-
-    let webhookResponseStatus = 'skipped_or_simulated';
-    let webhookSuccess = true;
-
-    try {
-      // Fire webhook with safe timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-      const res = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'CyberX-PureX-Webhook/1.0',
-          ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
-        },
-        body: JSON.stringify(wapiPilotPayload),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-
-      webhookResponseStatus = `HTTP_${res.status}`;
-      webhookSuccess = res.ok;
-    } catch {
-      // If external webhook is unreachable or mocked, log and continue gracefully
-      webhookResponseStatus = 'simulated_success';
-    }
+    // Send instant notification to Ahmad (01094200285)
+    const notificationResult = await notifyAhmadViaWebhook('booking', newBooking);
+    const whatsappMessage = generateBookingWhatsAppMessage(newBooking);
+    const directWhatsAppUrl = getDirectWhatsAppUrl(PUREX_CONFIG.whatsappNumber, whatsappMessage);
 
     return NextResponse.json(
       {
         success: true,
         booking: newBooking,
         bookingId: newBooking.id,
-        webhook: {
-          status: webhookResponseStatus,
-          targetUrl: webhookUrl,
-          sentPayload: wapiPilotPayload,
-        },
-        message: 'تم تسجيل الحجز بنجاح وإرسال إشعار الواتساب عبر WapiPilot',
+        referenceNumber: newBooking.referenceNumber,
+        directWhatsAppUrl,
+        notification: notificationResult,
+        message: 'تم تسجيل الحجز بنجاح وإرسال إشعار فوري إلى إدارة العمليات',
       },
       { status: 201 }
     );

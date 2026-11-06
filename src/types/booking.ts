@@ -2,7 +2,7 @@ export type PropertyType = 'apartment' | 'villa' | 'post_construction' | 'commer
 
 export type TimeSlot = 'morning' | 'evening' | 'flexible';
 
-export type PaymentMethod = 'vodafone_cash' | 'instapay' | 'binance_usdt';
+export type PaymentMethod = 'vodafone_cash' | 'axis_pay' | 'instapay' | 'binance_usdt';
 
 export type BookingStatus = 'pending_deposit' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
 
@@ -36,7 +36,7 @@ export interface Booking {
   paymentMethod: PaymentMethod;
   depositConfirmed: boolean;
   depositReference?: string;
-  receiptUrl?: string;
+  receiptUrl?: string; // Base64 data URL or hosted image URL of transfer proof
   status: BookingStatus;
   notes?: string;
   inspection?: DigitalInspection;
@@ -60,4 +60,27 @@ export interface DigitalInspection {
   clientRating?: number;
   clientFeedback?: string;
   approvedByClient: boolean;
+}
+
+// Worker Registration Types
+export type WorkerStatus = 'under_review' | 'approved' | 'rejected';
+
+export interface WorkerRegistration {
+  id: string;
+  referenceNumber: string;
+  createdAt: string;
+  fullName: string; // الاسم الثلاثي
+  phone: string; // رقم الهاتف
+  whatsapp?: string;
+  address: string; // العنوان
+  age: number; // السن
+  nationalIdFront: string; // صورة بطاقة الرقم القومي وجه
+  nationalIdBack: string; // صورة بطاقة الرقم القومي ظهر
+  experienceYears?: number;
+  specialty?: string;
+  notes?: string;
+  status: WorkerStatus; // Default: 'under_review' (قيد المراجعة)
+  reviewedBy?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
 }

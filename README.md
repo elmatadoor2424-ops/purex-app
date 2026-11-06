@@ -72,9 +72,20 @@ npm run dev
 
 التطبيق متاح الآن عبر:
 - **الموقع الرئيسي:** [http://localhost:3000](http://localhost:3000)
-- **لوحة العمليات:** [http://localhost:3000/admin/operations](http://localhost:3000/admin/operations)
-  *(كلمة المرور: `purex2026`)*
-- **API الحجز:** `http://localhost:3000/api/booking`
+- **بوابة تسجيل العاملات والتحقق من الهوية:** [http://localhost:3000/workers/register](http://localhost:3000/workers/register)
+- **لوحة العمليات المشتركة (دنيا وأحمد):** [http://localhost:3000/admin/operations](http://localhost:3000/admin/operations)
+  *(كلمات المرور المعتمدة: `purex2026` أو `ahmed` أو `donia`)*
+- **API الحجز وإشعارات الواتساب:** `http://localhost:3000/api/booking`
+- **API العاملات والتحقق:** `http://localhost:3000/api/workers`
+
+---
+
+## 💳 الحسابات المعتمدة ووسائل الدفع والتواصل
+- **التوقيع الرسمي:** جميع الحقوق محفوظة لشركة PureX 2026 - تطوير وتأمين شبكة CyberX تحت اشراف د. م/ احمد عمر.
+- **فودافون كاش واكسيس باي (Axis Pay):** `01554597494` و `01094200285`
+- **محفظة بينانس Binance USDT (TRC-20):** `0x4c9e11c4708e6e40015aa0986da7c3defbc5071a`
+- **الواتساب الرسمي:** `01094200285`
+- **الدعم الفني:** `01032398441`
 
 ---
 
